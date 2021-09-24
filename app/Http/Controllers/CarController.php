@@ -2,43 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CarRequest;
+use App\Models\Car;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Função para mostrar todos os registros.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $cars = Car::all();
+
+        if (count($cars) <= 0){
+            return response()->json('Nenhum Registro encontrado! :(');
+        }
+        return response()->json($cars);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Função para cadastrar um novo registro.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CarRequest $request)
     {
-        //
+        var_dump($request->all());
     }
 
     /**
-     * Display the specified resource.
+     * Função para mostrar um único registro.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -49,30 +46,19 @@ class CarController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Função para atualizar um registro;
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CarRequest $request, Car $car)
     {
         //
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Função para apagar um registro.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

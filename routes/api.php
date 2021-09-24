@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::get('/', function (){
-
-});
+Route::get('/cars', [CarController::class, 'index']);
+Route::post('/cars', [CarController::class, 'store']);
