@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CarRequest;
 use App\Models\Car;
+use Exception;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
@@ -18,7 +19,7 @@ class CarController extends Controller
         $cars = Car::all();
 
         if (count($cars) <= 0){
-            return response()->json('Nenhum Registro encontrado! :(');
+            return response()->json(['status' => 'Nenhum registro encontrado!']);
         }
         return response()->json($cars);
     }
@@ -27,44 +28,57 @@ class CarController extends Controller
      * Função para cadastrar um novo registro.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return string
      */
     public function store(CarRequest $request)
     {
-        var_dump($request->all());
+        try{
+
+            $car = Car::create([
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'year' => $request->year
+            ]);
+
+            return response('Criado', 201);
+
+        }catch(Exception $exception){
+
+            return $exception->getMessage();
+        }
+
     }
 
     /**
      * Função para mostrar um único registro.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $ca
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function showById(Car $car)
     {
-        //
+        return response()->json($car);
     }
 
     /**
      * Função para atualizar um registro;
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(CarRequest $request, Car $car)
+    public function update(Request $request)
     {
-        //
+        return response()->json($request);
     }
 
     /**
      * Função para apagar um registro.
      *
-     * @param  int  $id
+     * @param  int  $car
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete(Car $car)
     {
-        //
+        $car->delete();
+        return response('Excluido com Sucesso!', 200);
     }
 }
