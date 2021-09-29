@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CarRequest;
 use App\Models\Car;
 use Exception;
+use http\Env\Response;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
@@ -34,17 +35,18 @@ class CarController extends Controller
     {
         try{
 
-            $car = Car::create([
-                'brand' => $request->brand,
-                'model' => $request->model,
-                'year' => $request->year
-            ]);
+            $car = new Car();
+            $car->brand = $request->brand;
+            $car->model = $request->model;
+            $car->year = $request->year;
 
-            return response('Criado', 201);
+            $car->save();
 
-        }catch(Exception $exception){
+            return response(['success' => true], 201);
 
-            return $exception->getMessage();
+        }catch(\Exception $exception){
+
+            return response(['error' => $exception->getMessage()]);
         }
 
     }
@@ -52,7 +54,7 @@ class CarController extends Controller
     /**
      * Função para mostrar um único registro.
      *
-     * @param  int  $ca
+     * @param Car $car
      * @return \Illuminate\Http\JsonResponse
      */
     public function showById(Car $car)
@@ -63,11 +65,23 @@ class CarController extends Controller
     /**
      * Função para atualizar um registro;
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(CarRequest $request, Car $car)
     {
-        return response()->json($request);
+        try {
+
+            $car->brand = $request->brand;
+            $car->model = $request->model;
+            $car->year = $request->year;
+
+            $car->update();
+
+            return response(['success' => true]);
+
+        }catch (\Exception $exception){
+            return response(['error' => $exception->getMessage()]);
+        }
     }
 
     /**
@@ -78,7 +92,14 @@ class CarController extends Controller
      */
     public function delete(Car $car)
     {
-        $car->delete();
-        return response('Excluido com Sucesso!', 200);
+        try {
+
+            $car->delete();
+            return response(['success' => true]);
+
+        }catch (\Exception $exception){
+            return response(['error' => $exception->getMessage()]);
+        }
+
     }
 }
